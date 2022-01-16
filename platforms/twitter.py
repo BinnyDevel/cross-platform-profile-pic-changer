@@ -6,13 +6,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 
 
 def twitter_change_pfp(username, password, pfp):
     options = Options()
-    options.add_argument("-headless")
-    driver = webdriver.Firefox(options=options)
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    driver = webdriver.Chrome(options=options)
     driver.get("https://twitter.com/login")
     
     # Type in username
