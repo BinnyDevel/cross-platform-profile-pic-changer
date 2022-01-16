@@ -1,12 +1,8 @@
 # cross-platform-profile-pic-changer
 script to change profile pictures across multiple platforms
-
-
-
-
-
+## Setup
+## Important Notes
 ## Contributors
-
 <table>
   <tr>
     <td align="center"><a href="https://drama-binny.xyz"><img src="https://avatars.githubusercontent.com/u/89769070?v=4" width="100px;" alt=""/><br /><sub><b>BinnyDevel</b></sub></a></td>
