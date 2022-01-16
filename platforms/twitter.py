@@ -1,51 +1,69 @@
 import sys  
-from selenium import webdriver
 import time
 import threading
-
-
-def _handle_dialog(element_initiating_dialog, dialog_text_input):
-    def __handle_dialog(_element_initiating_dialog):
-        _element_initiating_dialog.click() # thread hangs here until upload dialog closes
-    t = threading.Thread(target=__handle_dialog, args=[element_initiating_dialog] )
-    t.start()
-    time.sleep(1) # poor thread synchronization, but good enough
-    upload_dialog = webdriver.switch_to_active_element()
-    upload_dialog.send_keys(dialog_text_input)
-    upload_dialog.send_keys(selenium.webdriver.common.keys.Keys.ENTER) # the ENTER key closes the upload dialog, other thread exits
+import pyautogui
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def twitter_change_pfp(username, password, pfp):
-    driver = webdriver.Chrome()
+    driver = webdriver.Firefox()
     driver.get("https://twitter.com/login")
-    driver.implicitly_wait(0.5)
-    twitterloginusername = driver.find_element_by_name("text")
-    twitterloginusername.send_keys(username)
+    
+    # Type in username
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.NAME, "text"))
+    ).send_keys(username)
 
-    twitternextbutton = driver.find_element_by_class_name("css-18t94o4 css-1dbjc4n r-sdzlij r-1phboty r-rs99b7 r-ywje51 r-usiww2 r-2yi16 r-1qi8awa r-1ny4l3l r-ymttw5 r-o7ynqc r-6416eg r-lrvibr r-13qz1uu")
-    twitternextbutton.click()
-    driver.implicitly_wait(0.5)
+    # Press Next
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[6]/div/span/span"))
+    ).click()
 
-    twitterloginpassword = driver.find_element_by_name("password")
-    twitterloginpassword.send_keys(password)
-    twitterloginbutton = driver.find_element_by_class_name("css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0")
-    twitterloginbutton.click()
-    driver.implicitly_wait(0.5)
+    # Type in password
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.NAME, "password"))
+    ).send_keys(password)
+    
+    # Press Login
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div/div/span/span"))
+    ).click()
 
     doesuserhave2fa = input("Does your account have 2FA? (y/n)")
     if doesuserhave2fa == "y":
         twitter2fa = input("Enter your 2FA code: ")
-        twitter2fainput = driver.find_element_by_name("text")
-        twitter2fainput.send_keys(twitter2fa)
-        driver.implicitly_wait(0.5)
-    profilebutton = driver.find_element_by_class_name("css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0")
-    profilebutton.click()
-    driver.implicitly_wait(0.5)
-    editprofilebutton = driver.find_element_by_class_name("css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0")
-    editprofilebutton.click()
-    driver.implicitly_wait(0.5)
-    profilepicturechangebutton = driver.find_element_by_class_name("css-901oao r-1awozwy r-jwli3a r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0")
-    _handle_dialog(profilepicturechangebutton, pfp)
+        driver.find_element(By.NAME, "text").send_keys(twitter2fa)
+        
+        # Press Next after 2FA
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div/span/span"))
+        ).click()
+    
+    driver.implicitly_wait(5)  # Twitter's weird    
+    # Jump into their profile
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[aria-label=Profile]"))
+    ).click()
+    
+    # Select edit profile button
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="editProfileButton"]'))
+    ).click()
+
+    # Find the change profile picture element
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '[aria-label="Add avatar photo"]'))
+    ).click()
+    
+    pyautogui.write(pfp)
+    pyautogui.press('return')
+    driver.implicitly_wait(5)  # Twitter's weird    
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="applyButton"]'))
+    ).click()
         
         
 if __name__ == "__main__":

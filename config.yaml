@@ -3,5 +3,5 @@ accounts:
     token: DISCORD_TOKEN_HERE
     password: DISCORD_PASSWORD_HERE
   twitter:
-    login: TWITTER_LOGIN
+    username: TWITTER_USERNAME
     password: TWITTER_PASSWORD
