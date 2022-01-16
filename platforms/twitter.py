@@ -1,6 +1,4 @@
 import sys  
-import time
-import threading
 import pyautogui
 from selenium import webdriver
 from selenium.webdriver.common.by import By
