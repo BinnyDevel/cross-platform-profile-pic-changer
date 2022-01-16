@@ -1,4 +1,5 @@
-import sys  
+import os
+import sys
 import pyautogui
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -60,7 +61,7 @@ def twitter_change_pfp(username, password, pfp):
         EC.presence_of_element_located((By.CSS_SELECTOR, '[aria-label="Add avatar photo"]'))
     ).click()
     
-    pyautogui.write(pfp)
+    pyautogui.write(os.path.abspath(pfp))
     pyautogui.press('return')
     driver.implicitly_wait(5)  # Twitter's weird    
     WebDriverWait(driver, 30).until(
