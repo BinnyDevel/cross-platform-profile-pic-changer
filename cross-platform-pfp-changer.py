@@ -4,9 +4,7 @@ import subprocess
 import sys
 import os.path
 import yaml
-import nest_asyncio
-
-nest_asyncio.apply()
+from platforms.twitter import twitter_change_pfp
 
 
 async def main():
@@ -19,8 +17,7 @@ async def main():
         user_logins = yaml.safe_load(f)['accounts']
     
     subprocess.call([sys.executable, os.path.join("platforms", "discord_pfp.py"), user_logins['discord']['token'], user_logins['discord']['password'], args.image], stderr=subprocess.DEVNULL)
-    
+    twitter_change_pfp(user_logins['twitter']['login'], user_logins['twitter']['password'])
 
 if __name__ == '__main__':
     asyncio.run(main())
-
