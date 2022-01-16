@@ -1,0 +1,7 @@
+accounts:
+  discord:
+    token: DISCORD_TOKEN_HERE
+    password: DISCORD_PASSWORD_HERE
+  twitter:
+    login: TWITTER_LOGIN
+    password: TWITTER_PASSWORD
